@@ -37,6 +37,7 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
+      height: 100vh;
     }
 
     .player-sidebar h2 {
@@ -84,6 +85,88 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
+    }
+
+    .players-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Background Settings */
+    .bg-settings {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bg-settings h3 {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .bg-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      margin: 0 auto;
+    }
+
+    .bg-option:hover {
+      border-color: var(--text-secondary);
+      transform: scale(1.05);
+    }
+
+    .bg-option.active {
+      border-color: var(--accent);
+    }
+
+    .bg-option.gradient-dark {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    }
+
+    .bg-option.gradient-purple {
+      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+    }
+
+    .bg-option.gradient-blue {
+      background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%);
+    }
+
+    .bg-option.gradient-warm {
+      background: linear-gradient(135deg, #1a1210 0%, #2d1f1a 50%, #1a1210 100%);
+    }
+
+    .bg-option.media-echo {
+      background: conic-gradient(from 180deg, #1d9bf0, #f91880, #00ba7c, #1d9bf0);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-option.media-echo::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: #000;
+      border-radius: 5px;
+    }
+
+    .bg-label {
+      font-size: 8px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: -4px;
     }
 
     /* Editor Panel */
@@ -212,7 +295,54 @@
       align-items: center;
       justify-content: center;
       padding: 40px;
-      background: #16181c;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      transition: background 0.5s ease;
+    }
+
+    .preview-bg.gradient-dark {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    }
+
+    .preview-bg.gradient-purple {
+      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+    }
+
+    .preview-bg.gradient-blue {
+      background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%);
+    }
+
+    .preview-bg.gradient-warm {
+      background: linear-gradient(135deg, #1a1210 0%, #2d1f1a 50%, #1a1210 100%);
+    }
+
+    .media-echo-bg {
+      position: absolute;
+      inset: -50%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(100px) saturate(1.5) brightness(0.4);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      transform: scale(1.5);
+    }
+
+    .media-echo-bg.active {
+      opacity: 1;
+    }
+
+    .preview-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
     }
 
     /* Tweet Styles */
@@ -223,6 +353,8 @@
       padding: 16px 20px;
       border-radius: 16px;
       border: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
     }
 
     .tweet-header {
@@ -321,6 +453,11 @@
       display: block;
       max-height: 510px;
       object-fit: cover;
+      cursor: pointer;
+    }
+
+    .tweet-media video:fullscreen {
+      object-fit: contain;
     }
 
     .video-duration {
@@ -443,21 +580,33 @@
   <!-- Player Sidebar -->
   <div class="player-sidebar">
     <h2>Players</h2>
-    <div class="player-item" data-player="joonasvirtanen">
-      <img class="player-avatar active" src="https://unavatar.io/twitter/joonasvirtanen" alt="Joonas">
-      <span class="player-name">Joonas</span>
+    <div class="players-list">
+      <div class="player-item" data-player="joonasvirtanen">
+        <img class="player-avatar active" src="https://unavatar.io/twitter/joonasvirtanen" alt="Joonas">
+        <span class="player-name">Joonas</span>
+      </div>
+      <div class="player-item" data-player="wabi">
+        <img class="player-avatar" src="wabi-avatar.jpg" alt="Wabi">
+        <span class="player-name">Wabi</span>
+      </div>
+      <div class="player-item" data-player="ekuyda">
+        <img class="player-avatar" src="https://unavatar.io/twitter/ekuyda" alt="ekuyda">
+        <span class="player-name">ekuyda</span>
+      </div>
+      <div class="player-item" data-player="BlasMoros">
+        <img class="player-avatar" src="https://unavatar.io/twitter/BlasMoros" alt="Blas">
+        <span class="player-name">Blas</span>
+      </div>
     </div>
-    <div class="player-item" data-player="wabi">
-      <img class="player-avatar" src="wabi-avatar.jpg" alt="Wabi">
-      <span class="player-name">Wabi</span>
-    </div>
-    <div class="player-item" data-player="ekuyda">
-      <img class="player-avatar" src="https://unavatar.io/twitter/ekuyda" alt="ekuyda">
-      <span class="player-name">ekuyda</span>
-    </div>
-    <div class="player-item" data-player="BlasMoros">
-      <img class="player-avatar" src="https://unavatar.io/twitter/BlasMoros" alt="Blas">
-      <span class="player-name">Blas</span>
+
+    <div class="bg-settings">
+      <h3>Canvas</h3>
+      <div class="bg-option gradient-dark active" data-bg="gradient-dark" title="Dark"></div>
+      <div class="bg-option gradient-purple" data-bg="gradient-purple" title="Purple"></div>
+      <div class="bg-option gradient-blue" data-bg="gradient-blue" title="Blue"></div>
+      <div class="bg-option gradient-warm" data-bg="gradient-warm" title="Warm"></div>
+      <div class="bg-option media-echo" data-bg="media-echo" title="Media Echo"></div>
+      <span class="bg-label">Echo</span>
     </div>
   </div>
 
@@ -491,6 +640,10 @@ if you obsess over perceived performance, interaction design & typography dm me<
   </div>
 
   <div class="preview-container">
+    <div class="preview-bg gradient-dark" id="previewBg"></div>
+    <div class="media-echo-bg" id="mediaEchoBg"></div>
+    <div class="preview-noise"></div>
+
     <div class="tweet">
       <div class="tweet-header">
         <img class="avatar" id="avatarPreview" src="https://unavatar.io/twitter/joonasvirtanen" alt="Avatar">
@@ -604,8 +757,44 @@ if you obsess over perceived performance, interaction design & typography dm me<
     const videoPlayIcon = document.getElementById('videoPlayIcon');
     const mediaUploadBtn = document.getElementById('mediaUploadBtn');
     const clearMediaBtn = document.getElementById('clearMediaBtn');
+    const previewBg = document.getElementById('previewBg');
+    const mediaEchoBg = document.getElementById('mediaEchoBg');
 
     let currentMediaType = 'image';
+    let currentBgMode = 'gradient-dark';
+    let currentMediaSrc = null;
+
+    // Background selection
+    document.querySelectorAll('.bg-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.bg-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+
+        const bgType = option.dataset.bg;
+        currentBgMode = bgType;
+
+        // Update background classes
+        previewBg.className = 'preview-bg ' + (bgType !== 'media-echo' ? bgType : 'gradient-dark');
+
+        // Handle media echo
+        if (bgType === 'media-echo' && currentMediaSrc) {
+          mediaEchoBg.classList.add('active');
+        } else {
+          mediaEchoBg.classList.remove('active');
+        }
+      });
+    });
+
+    function updateMediaEcho(src) {
+      currentMediaSrc = src;
+      mediaEchoBg.style.backgroundImage = src ? `url(${src})` : 'none';
+
+      if (currentBgMode === 'media-echo' && src) {
+        mediaEchoBg.classList.add('active');
+      } else {
+        mediaEchoBg.classList.remove('active');
+      }
+    }
 
     // Player selection
     document.querySelectorAll('.player-item').forEach(item => {
@@ -708,12 +897,23 @@ if you obsess over perceived performance, interaction design & typography dm me<
             mediaVideo.src = e.target.result;
             videoDurationPreview.classList.remove('hidden');
             videoPlayIcon.classList.remove('hidden');
+
+            // Get first frame for echo background
+            mediaVideo.addEventListener('loadeddata', () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = mediaVideo.videoWidth;
+              canvas.height = mediaVideo.videoHeight;
+              canvas.getContext('2d').drawImage(mediaVideo, 0, 0);
+              updateMediaEcho(canvas.toDataURL());
+            }, { once: true });
           } else {
             mediaVideo.classList.add('hidden');
             mediaImage.classList.remove('hidden');
             mediaImage.src = e.target.result;
             videoDurationPreview.classList.add('hidden');
             videoPlayIcon.classList.add('hidden');
+
+            updateMediaEcho(e.target.result);
           }
         };
         reader.readAsDataURL(file);
@@ -733,6 +933,41 @@ if you obsess over perceived performance, interaction design & typography dm me<
       mediaUploadBtn.classList.remove('has-file');
       mediaUploadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-7l-3 3.72L9 13l-3 4h12l-4-5z"/></svg> Upload Media';
       mediaInput.value = '';
+      updateMediaEcho(null);
+    });
+
+    // Video playback - click to play fullscreen with sound
+    mediaVideo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mediaVideo.muted = false;
+      mediaVideo.controls = true;
+
+      if (mediaVideo.requestFullscreen) {
+        mediaVideo.requestFullscreen();
+      } else if (mediaVideo.webkitRequestFullscreen) {
+        mediaVideo.webkitRequestFullscreen();
+      }
+
+      mediaVideo.play();
+    });
+
+    // When exiting fullscreen, reset
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        mediaVideo.muted = true;
+        mediaVideo.controls = false;
+        mediaVideo.pause();
+        mediaVideo.currentTime = 0;
+      }
+    });
+
+    document.addEventListener('webkitfullscreenchange', () => {
+      if (!document.webkitFullscreenElement) {
+        mediaVideo.muted = true;
+        mediaVideo.controls = false;
+        mediaVideo.pause();
+        mediaVideo.currentTime = 0;
+      }
     });
   </script>
 </body>
