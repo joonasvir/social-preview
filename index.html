@@ -132,20 +132,16 @@
       border-color: var(--accent);
     }
 
-    .bg-option.gradient-dark {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    .bg-option.bg-gradient {
+      background: url('bg-gradient.jpg') center/cover;
     }
 
-    .bg-option.gradient-purple {
-      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+    .bg-option.bg-abstract1 {
+      background: url('bg-abstract1.jpg') center/cover;
     }
 
-    .bg-option.gradient-blue {
-      background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%);
-    }
-
-    .bg-option.gradient-warm {
-      background: linear-gradient(135deg, #1a1210 0%, #2d1f1a 50%, #1a1210 100%);
+    .bg-option.bg-abstract2 {
+      background: url('bg-abstract2.jpg') center/cover;
     }
 
     .bg-option.media-echo {
@@ -302,24 +298,20 @@
     .preview-bg {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
-      transition: background 0.5s ease;
+      background: url('bg-gradient.jpg') center/cover;
+      transition: opacity 0.5s ease;
     }
 
-    .preview-bg.gradient-dark {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    .preview-bg.bg-gradient {
+      background: url('bg-gradient.jpg') center/cover;
     }
 
-    .preview-bg.gradient-purple {
-      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+    .preview-bg.bg-abstract1 {
+      background: url('bg-abstract1.jpg') center/cover;
     }
 
-    .preview-bg.gradient-blue {
-      background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%);
-    }
-
-    .preview-bg.gradient-warm {
-      background: linear-gradient(135deg, #1a1210 0%, #2d1f1a 50%, #1a1210 100%);
+    .preview-bg.bg-abstract2 {
+      background: url('bg-abstract2.jpg') center/cover;
     }
 
     .media-echo-bg {
@@ -601,10 +593,9 @@
 
     <div class="bg-settings">
       <h3>Canvas</h3>
-      <div class="bg-option gradient-dark active" data-bg="gradient-dark" title="Dark"></div>
-      <div class="bg-option gradient-purple" data-bg="gradient-purple" title="Purple"></div>
-      <div class="bg-option gradient-blue" data-bg="gradient-blue" title="Blue"></div>
-      <div class="bg-option gradient-warm" data-bg="gradient-warm" title="Warm"></div>
+      <div class="bg-option bg-gradient active" data-bg="bg-gradient" title="Gradient"></div>
+      <div class="bg-option bg-abstract1" data-bg="bg-abstract1" title="Abstract 1"></div>
+      <div class="bg-option bg-abstract2" data-bg="bg-abstract2" title="Abstract 2"></div>
       <div class="bg-option media-echo" data-bg="media-echo" title="Media Echo"></div>
       <span class="bg-label">Echo</span>
     </div>
@@ -640,7 +631,7 @@ if you obsess over perceived performance, interaction design & typography dm me<
   </div>
 
   <div class="preview-container">
-    <div class="preview-bg gradient-dark" id="previewBg"></div>
+    <div class="preview-bg bg-gradient" id="previewBg"></div>
     <div class="media-echo-bg" id="mediaEchoBg"></div>
     <div class="preview-noise"></div>
 
@@ -761,7 +752,7 @@ if you obsess over perceived performance, interaction design & typography dm me<
     const mediaEchoBg = document.getElementById('mediaEchoBg');
 
     let currentMediaType = 'image';
-    let currentBgMode = 'gradient-dark';
+    let currentBgMode = 'bg-gradient';
     let currentMediaSrc = null;
 
     // Background selection
@@ -774,7 +765,7 @@ if you obsess over perceived performance, interaction design & typography dm me<
         currentBgMode = bgType;
 
         // Update background classes
-        previewBg.className = 'preview-bg ' + (bgType !== 'media-echo' ? bgType : 'gradient-dark');
+        previewBg.className = 'preview-bg ' + (bgType !== 'media-echo' ? bgType : 'bg-gradient');
 
         // Handle media echo
         if (bgType === 'media-echo' && currentMediaSrc) {
