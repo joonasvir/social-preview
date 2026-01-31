@@ -27,9 +27,68 @@
       display: flex;
     }
 
+    /* Player Sidebar */
+    .player-sidebar {
+      width: 80px;
+      padding: 16px 12px;
+      border-right: 1px solid var(--border);
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-sidebar h2 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .player-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      background: var(--border);
+    }
+
+    .player-avatar:hover {
+      border-color: var(--text-secondary);
+      transform: scale(1.05);
+    }
+
+    .player-avatar.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.3);
+    }
+
+    .player-name {
+      font-size: 9px;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: -4px;
+    }
+
+    .player-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* Editor Panel */
     .editor {
-      width: 400px;
+      width: 360px;
       padding: 24px;
       border-right: 1px solid var(--border);
       overflow-y: auto;
@@ -365,26 +424,38 @@
   </style>
 </head>
 <body>
+  <!-- Player Sidebar -->
+  <div class="player-sidebar">
+    <h2>Players</h2>
+    <div class="player-item" data-player="joonasvirtanen">
+      <img class="player-avatar active" src="https://unavatar.io/twitter/joonasvirtanen" alt="Joonas">
+      <span class="player-name">Joonas</span>
+    </div>
+    <div class="player-item" data-player="wabi">
+      <img class="player-avatar" src="wabi-avatar.jpg" alt="Wabi">
+      <span class="player-name">Wabi</span>
+    </div>
+    <div class="player-item" data-player="ekuyda">
+      <img class="player-avatar" src="https://unavatar.io/twitter/ekuyda" alt="ekuyda">
+      <span class="player-name">ekuyda</span>
+    </div>
+    <div class="player-item" data-player="BlasMoros">
+      <img class="player-avatar" src="https://unavatar.io/twitter/BlasMoros" alt="Blas">
+      <span class="player-name">Blas</span>
+    </div>
+  </div>
+
   <div class="editor">
     <h1>Twitter Preview</h1>
-
-    <div class="field">
-      <label>Profile Picture</label>
-      <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-      <button class="upload-btn" onclick="document.getElementById('avatarInput').click()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" transform="rotate(90 12 12)"/></svg>
-        Upload Avatar
-      </button>
-    </div>
 
     <div class="field-row">
       <div class="field">
         <label>Display Name</label>
-        <input type="text" id="displayName" value="Your Name">
+        <input type="text" id="displayName" value="Joonas Virtanen">
       </div>
       <div class="field">
         <label>Username</label>
-        <input type="text" id="username" value="username">
+        <input type="text" id="username" value="joonasvirtanen">
       </div>
     </div>
 
@@ -467,14 +538,14 @@ if you obsess over perceived performance, interaction design & typography dm me<
   <div class="preview-container">
     <div class="tweet">
       <div class="tweet-header">
-        <img class="avatar" id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%232f3336' width='40' height='40'/%3E%3C/svg%3E" alt="Avatar">
+        <img class="avatar" id="avatarPreview" src="https://unavatar.io/twitter/joonasvirtanen" alt="Avatar">
         <div class="tweet-header-content">
           <div class="tweet-header-top">
-            <span class="display-name" id="displayNamePreview">Your Name</span>
+            <span class="display-name" id="displayNamePreview">Joonas Virtanen</span>
             <svg class="verified-badge" id="verifiedBadge" viewBox="0 0 22 22" fill="#1d9bf0">
               <path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/>
             </svg>
-            <span class="username" id="usernamePreview">@username</span>
+            <span class="username" id="usernamePreview">@joonasvirtanen</span>
           </div>
         </div>
         <div class="tweet-header-right">
@@ -537,6 +608,34 @@ if you obsess over perceived performance, interaction design & typography dm me<
   </div>
 
   <script>
+    // Player profiles data
+    const players = {
+      joonasvirtanen: {
+        displayName: 'Joonas Virtanen',
+        username: 'joonasvirtanen',
+        avatar: 'https://unavatar.io/twitter/joonasvirtanen',
+        verified: true
+      },
+      wabi: {
+        displayName: 'Wabi',
+        username: 'wabi',
+        avatar: 'wabi-avatar.jpg',
+        verified: true
+      },
+      ekuyda: {
+        displayName: 'ekuyda',
+        username: 'ekuyda',
+        avatar: 'https://unavatar.io/twitter/ekuyda',
+        verified: true
+      },
+      BlasMoros: {
+        displayName: 'Blas Moros',
+        username: 'BlasMoros',
+        avatar: 'https://unavatar.io/twitter/BlasMoros',
+        verified: true
+      }
+    };
+
     // Get all inputs
     const displayNameInput = document.getElementById('displayName');
     const usernameInput = document.getElementById('username');
@@ -549,7 +648,6 @@ if you obsess over perceived performance, interaction design & typography dm me<
     const retweetsInput = document.getElementById('retweets');
     const likesInput = document.getElementById('likes');
     const bookmarksInput = document.getElementById('bookmarks');
-    const avatarInput = document.getElementById('avatarInput');
     const mediaInput = document.getElementById('mediaInput');
     const videoDurationInput = document.getElementById('videoDuration');
 
@@ -576,6 +674,29 @@ if you obsess over perceived performance, interaction design & typography dm me<
     const clearMediaBtn = document.getElementById('clearMediaBtn');
 
     let currentMediaType = 'image';
+
+    // Player selection
+    document.querySelectorAll('.player-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const playerId = item.dataset.player;
+        const player = players[playerId];
+
+        // Update active state
+        document.querySelectorAll('.player-avatar').forEach(a => a.classList.remove('active'));
+        item.querySelector('.player-avatar').classList.add('active');
+
+        // Update form fields
+        displayNameInput.value = player.displayName;
+        usernameInput.value = player.username;
+        verifiedInput.checked = player.verified;
+
+        // Update preview
+        displayNamePreview.textContent = player.displayName;
+        usernamePreview.textContent = '@' + player.username;
+        avatarPreview.src = player.avatar;
+        verifiedBadge.classList.toggle('hidden', !player.verified);
+      });
+    });
 
     // Bind text inputs
     displayNameInput.addEventListener('input', () => {
@@ -624,18 +745,6 @@ if you obsess over perceived performance, interaction design & typography dm me<
 
     videoDurationInput.addEventListener('input', () => {
       videoDurationPreview.textContent = videoDurationInput.value;
-    });
-
-    // Avatar upload
-    avatarInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          avatarPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
     });
 
     // Media type toggle
