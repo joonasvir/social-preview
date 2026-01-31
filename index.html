@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Preview</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #000;
+      --text: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --accent: #1d9bf0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #16181c;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Editor Panel */
+    .editor {
+      width: 400px;
+      padding: 24px;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      height: 100vh;
+      background: #000;
+    }
+
+    .editor h1 {
+      font-size: 20px;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 12px;
+      background: #16181c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .field-row .field {
+      flex: 1;
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .upload-btn.has-file {
+      border-style: solid;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-field input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-field label {
+      margin-bottom: 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    /* Preview Panel */
+    .preview-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: #16181c;
+    }
+
+    /* Tweet Styles */
+    .tweet {
+      background: var(--bg);
+      width: 100%;
+      max-width: 600px;
+      padding: 12px 16px;
+      border-radius: 0;
+    }
+
+    .tweet-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+      flex-shrink: 0;
+      background: var(--border);
+    }
+
+    .tweet-header-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tweet-header-top {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .display-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .verified-badge {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .username {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .tweet-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .subscribe-btn {
+      padding: 6px 16px;
+      border: 1px solid #536471;
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .tweet-content {
+      font-size: 17px;
+      line-height: 1.4;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-bottom: 12px;
+    }
+
+    .tweet-media {
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+      background: #16181c;
+    }
+
+    .tweet-media img,
+    .tweet-media video {
+      width: 100%;
+      display: block;
+      max-height: 510px;
+      object-fit: cover;
+    }
+
+    .video-duration {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .video-play-icon {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 0;
+      height: 0;
+      border-left: 12px solid white;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+
+    .tweet-meta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tweet-meta .separator {
+      margin: 0 2px;
+    }
+
+    .tweet-meta .views-count {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .tweet-actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      max-width: 425px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .action-item svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .action-item.replies:hover { color: var(--accent); }
+    .action-item.retweets:hover { color: #00ba7c; }
+    .action-item.likes:hover { color: #f91880; }
+    .action-item.bookmarks:hover { color: var(--accent); }
+    .action-item.share:hover { color: var(--accent); }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Media type toggle */
+    .media-type-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .media-type-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .media-type-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(29, 155, 240, 0.1);
+    }
+
+    .clear-media-btn {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid #f4212e;
+      border-radius: 8px;
+      color: #f4212e;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .clear-media-btn:hover {
+      background: rgba(244, 33, 46, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="editor">
+    <h1>Twitter Preview</h1>
+
+    <div class="field">
+      <label>Profile Picture</label>
+      <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+      <button class="upload-btn" onclick="document.getElementById('avatarInput').click()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" transform="rotate(90 12 12)"/></svg>
+        Upload Avatar
+      </button>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Display Name</label>
+        <input type="text" id="displayName" value="Your Name">
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username" value="username">
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="checkbox-field">
+        <input type="checkbox" id="verified" checked>
+        <label for="verified">Verified Badge</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Post Content</label>
+      <textarea id="content" placeholder="What's happening?">jam with us
+
+- high agency, low ego team
+- design + interface building
+- unlimited opus 4.5 credits
+
+if you obsess over perceived performance, interaction design & typography dm me</textarea>
+    </div>
+
+    <div class="field">
+      <label>Media</label>
+      <div class="media-type-toggle">
+        <button class="media-type-btn active" data-type="image">Image</button>
+        <button class="media-type-btn" data-type="video">Video</button>
+      </div>
+      <input type="file" id="mediaInput" accept="image/*,video/*" style="display: none;">
+      <button class="upload-btn" id="mediaUploadBtn" onclick="document.getElementById('mediaInput').click()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-7l-3 3.72L9 13l-3 4h12l-4-5z"/></svg>
+        Upload Media
+      </button>
+      <button class="clear-media-btn hidden" id="clearMediaBtn">Clear Media</button>
+    </div>
+
+    <div class="field hidden" id="videoDurationField">
+      <label>Video Duration (e.g., 0:02)</label>
+      <input type="text" id="videoDuration" value="0:02">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Time</label>
+        <input type="text" id="postTime" value="4:36 PM">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="postDate" value="Jan 30, 2026">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Views</label>
+      <input type="text" id="views" value="9,551">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Replies</label>
+        <input type="text" id="replies" value="16">
+      </div>
+      <div class="field">
+        <label>Retweets</label>
+        <input type="text" id="retweets" value="7">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Likes</label>
+        <input type="text" id="likes" value="256">
+      </div>
+      <div class="field">
+        <label>Bookmarks</label>
+        <input type="text" id="bookmarks" value="101">
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-container">
+    <div class="tweet">
+      <div class="tweet-header">
+        <img class="avatar" id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%232f3336' width='40' height='40'/%3E%3C/svg%3E" alt="Avatar">
+        <div class="tweet-header-content">
+          <div class="tweet-header-top">
+            <span class="display-name" id="displayNamePreview">Your Name</span>
+            <svg class="verified-badge" id="verifiedBadge" viewBox="0 0 22 22" fill="#1d9bf0">
+              <path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/>
+            </svg>
+            <span class="username" id="usernamePreview">@username</span>
+          </div>
+        </div>
+        <div class="tweet-header-right">
+          <button class="subscribe-btn">Subscribe</button>
+          <div class="icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/></svg>
+          </div>
+          <div class="icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="tweet-content" id="contentPreview">jam with us
+
+- high agency, low ego team
+- design + interface building
+- unlimited opus 4.5 credits
+
+if you obsess over perceived performance, interaction design & typography dm me</div>
+
+      <div class="tweet-media hidden" id="mediaPreview">
+        <img id="mediaImage" class="hidden" src="" alt="Media">
+        <video id="mediaVideo" class="hidden" src="" muted></video>
+        <div class="video-duration hidden" id="videoDurationPreview">0:02</div>
+        <div class="video-play-icon hidden" id="videoPlayIcon"></div>
+      </div>
+
+      <div class="tweet-meta">
+        <span id="postTimePreview">4:36 PM</span>
+        <span class="separator">·</span>
+        <span id="postDatePreview">Jan 30, 2026</span>
+        <span class="separator">·</span>
+        <span class="views-count" id="viewsPreview">9,551</span>
+        <span>Views</span>
+      </div>
+
+      <div class="tweet-actions">
+        <div class="action-item replies">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
+          <span id="repliesPreview">16</span>
+        </div>
+        <div class="action-item retweets">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
+          <span id="retweetsPreview">7</span>
+        </div>
+        <div class="action-item likes">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
+          <span id="likesPreview">256</span>
+        </div>
+        <div class="action-item bookmarks">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>
+          <span id="bookmarksPreview">101</span>
+        </div>
+        <div class="action-item share">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get all inputs
+    const displayNameInput = document.getElementById('displayName');
+    const usernameInput = document.getElementById('username');
+    const verifiedInput = document.getElementById('verified');
+    const contentInput = document.getElementById('content');
+    const postTimeInput = document.getElementById('postTime');
+    const postDateInput = document.getElementById('postDate');
+    const viewsInput = document.getElementById('views');
+    const repliesInput = document.getElementById('replies');
+    const retweetsInput = document.getElementById('retweets');
+    const likesInput = document.getElementById('likes');
+    const bookmarksInput = document.getElementById('bookmarks');
+    const avatarInput = document.getElementById('avatarInput');
+    const mediaInput = document.getElementById('mediaInput');
+    const videoDurationInput = document.getElementById('videoDuration');
+
+    // Get all preview elements
+    const displayNamePreview = document.getElementById('displayNamePreview');
+    const usernamePreview = document.getElementById('usernamePreview');
+    const verifiedBadge = document.getElementById('verifiedBadge');
+    const contentPreview = document.getElementById('contentPreview');
+    const postTimePreview = document.getElementById('postTimePreview');
+    const postDatePreview = document.getElementById('postDatePreview');
+    const viewsPreview = document.getElementById('viewsPreview');
+    const repliesPreview = document.getElementById('repliesPreview');
+    const retweetsPreview = document.getElementById('retweetsPreview');
+    const likesPreview = document.getElementById('likesPreview');
+    const bookmarksPreview = document.getElementById('bookmarksPreview');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const mediaPreview = document.getElementById('mediaPreview');
+    const mediaImage = document.getElementById('mediaImage');
+    const mediaVideo = document.getElementById('mediaVideo');
+    const videoDurationPreview = document.getElementById('videoDurationPreview');
+    const videoPlayIcon = document.getElementById('videoPlayIcon');
+    const videoDurationField = document.getElementById('videoDurationField');
+    const mediaUploadBtn = document.getElementById('mediaUploadBtn');
+    const clearMediaBtn = document.getElementById('clearMediaBtn');
+
+    let currentMediaType = 'image';
+
+    // Bind text inputs
+    displayNameInput.addEventListener('input', () => {
+      displayNamePreview.textContent = displayNameInput.value;
+    });
+
+    usernameInput.addEventListener('input', () => {
+      usernamePreview.textContent = '@' + usernameInput.value.replace('@', '');
+    });
+
+    verifiedInput.addEventListener('change', () => {
+      verifiedBadge.classList.toggle('hidden', !verifiedInput.checked);
+    });
+
+    contentInput.addEventListener('input', () => {
+      contentPreview.textContent = contentInput.value;
+    });
+
+    postTimeInput.addEventListener('input', () => {
+      postTimePreview.textContent = postTimeInput.value;
+    });
+
+    postDateInput.addEventListener('input', () => {
+      postDatePreview.textContent = postDateInput.value;
+    });
+
+    viewsInput.addEventListener('input', () => {
+      viewsPreview.textContent = viewsInput.value;
+    });
+
+    repliesInput.addEventListener('input', () => {
+      repliesPreview.textContent = repliesInput.value;
+    });
+
+    retweetsInput.addEventListener('input', () => {
+      retweetsPreview.textContent = retweetsInput.value;
+    });
+
+    likesInput.addEventListener('input', () => {
+      likesPreview.textContent = likesInput.value;
+    });
+
+    bookmarksInput.addEventListener('input', () => {
+      bookmarksPreview.textContent = bookmarksInput.value;
+    });
+
+    videoDurationInput.addEventListener('input', () => {
+      videoDurationPreview.textContent = videoDurationInput.value;
+    });
+
+    // Avatar upload
+    avatarInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          avatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Media type toggle
+    document.querySelectorAll('.media-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.media-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMediaType = btn.dataset.type;
+
+        if (currentMediaType === 'video') {
+          mediaInput.accept = 'video/*';
+        } else {
+          mediaInput.accept = 'image/*';
+        }
+      });
+    });
+
+    // Media upload
+    mediaInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const isVideo = file.type.startsWith('video/');
+
+          mediaPreview.classList.remove('hidden');
+          clearMediaBtn.classList.remove('hidden');
+          mediaUploadBtn.classList.add('has-file');
+          mediaUploadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Media added';
+
+          if (isVideo) {
+            mediaImage.classList.add('hidden');
+            mediaVideo.classList.remove('hidden');
+            mediaVideo.src = e.target.result;
+            videoDurationPreview.classList.remove('hidden');
+            videoPlayIcon.classList.remove('hidden');
+            videoDurationField.classList.remove('hidden');
+          } else {
+            mediaVideo.classList.add('hidden');
+            mediaImage.classList.remove('hidden');
+            mediaImage.src = e.target.result;
+            videoDurationPreview.classList.add('hidden');
+            videoPlayIcon.classList.add('hidden');
+            videoDurationField.classList.add('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Clear media
+    clearMediaBtn.addEventListener('click', () => {
+      mediaPreview.classList.add('hidden');
+      mediaImage.classList.add('hidden');
+      mediaImage.src = '';
+      mediaVideo.classList.add('hidden');
+      mediaVideo.src = '';
+      videoDurationPreview.classList.add('hidden');
+      videoPlayIcon.classList.add('hidden');
+      videoDurationField.classList.add('hidden');
+      clearMediaBtn.classList.add('hidden');
+      mediaUploadBtn.classList.remove('has-file');
+      mediaUploadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-7l-3 3.72L9 13l-3 4h12l-4-5z"/></svg> Upload Media';
+      mediaInput.value = '';
+    });
+  </script>
+</body>
+</html>
