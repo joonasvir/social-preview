@@ -578,21 +578,25 @@
   <div class="player-sidebar">
     <h2>Players</h2>
     <div class="players-list">
-      <div class="player-item" data-player="joonasvirtanen">
-        <img class="player-avatar active" src="https://unavatar.io/twitter/joonasvirtanen" alt="Joonas">
-        <span class="player-name">Joonas</span>
-      </div>
       <div class="player-item" data-player="wabi">
-        <img class="player-avatar" src="wabi-avatar.jpg" alt="Wabi">
+        <img class="player-avatar active" src="wabi-avatar.jpg" alt="Wabi">
         <span class="player-name">Wabi</span>
       </div>
       <div class="player-item" data-player="ekuyda">
-        <img class="player-avatar" src="https://unavatar.io/twitter/ekuyda" alt="ekuyda">
-        <span class="player-name">ekuyda</span>
+        <img class="player-avatar" src="https://unavatar.io/twitter/ekuyda" alt="Eugenia">
+        <span class="player-name">Eugenia</span>
+      </div>
+      <div class="player-item" data-player="joonasvirtanen">
+        <img class="player-avatar" src="https://unavatar.io/twitter/joonasvirtanen" alt="Joonas">
+        <span class="player-name">Joonas</span>
       </div>
       <div class="player-item" data-player="BlasMoros">
         <img class="player-avatar" src="https://unavatar.io/twitter/BlasMoros" alt="Blas">
         <span class="player-name">Blas</span>
+      </div>
+      <div class="player-item" data-player="dantioxidants">
+        <img class="player-avatar" src="https://unavatar.io/twitter/dantioxidants" alt="Dan">
+        <span class="player-name">Dan</span>
       </div>
     </div>
 
@@ -642,16 +646,16 @@ if you obsess over perceived performance, interaction design & typography dm me<
 
     <div class="tweet">
       <div class="tweet-header">
-        <img class="avatar" id="avatarPreview" src="https://unavatar.io/twitter/joonasvirtanen" alt="Avatar">
+        <img class="avatar" id="avatarPreview" src="wabi-avatar.jpg" alt="Avatar">
         <div class="tweet-header-content">
           <div class="tweet-header-top">
-            <span class="display-name editable" id="displayNamePreview" data-field="displayName">Joonas Virtanen</span>
+            <span class="display-name editable" id="displayNamePreview" data-field="displayName">Wabi</span>
             <svg class="verified-badge" id="verifiedBadge" viewBox="0 0 22 22" fill="#1d9bf0">
               <path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.223-.607.27-1.264.14-1.897-.131-.634-.437-1.218-.882-1.687-.47-.445-1.053-.75-1.687-.882-.633-.13-1.29-.083-1.897.14-.273-.587-.704-1.086-1.245-1.44S11.647 1.62 11 1.604c-.646.017-1.273.213-1.813.568s-.969.854-1.24 1.44c-.608-.223-1.267-.272-1.902-.14-.635.13-1.22.436-1.69.882-.445.47-.749 1.055-.878 1.688-.13.633-.08 1.29.144 1.896-.587.274-1.087.705-1.443 1.245-.356.54-.555 1.17-.574 1.817.02.647.218 1.276.574 1.817.356.54.856.972 1.443 1.245-.224.606-.274 1.263-.144 1.896.13.634.433 1.218.877 1.688.47.443 1.054.747 1.687.878.633.132 1.29.084 1.897-.136.274.586.705 1.084 1.246 1.439.54.354 1.17.551 1.816.569.647-.016 1.276-.213 1.817-.567s.972-.854 1.245-1.44c.604.239 1.266.296 1.903.164.636-.132 1.22-.447 1.68-.907.46-.46.776-1.044.908-1.681s.075-1.299-.165-1.903c.586-.274 1.084-.705 1.439-1.246.354-.54.551-1.17.569-1.816zM9.662 14.85l-3.429-3.428 1.293-1.302 2.072 2.072 4.4-4.794 1.347 1.246z"/>
             </svg>
           </div>
           <div class="tweet-header-bottom">
-            <span class="username editable" id="usernamePreview" data-field="username">@joonasvirtanen</span>
+            <span class="username editable" id="usernamePreview" data-field="username">@wabi</span>
           </div>
         </div>
         <div class="tweet-header-right">
@@ -716,12 +720,6 @@ if you obsess over perceived performance, interaction design & typography dm me<
   <script>
     // Player profiles data
     const players = {
-      joonasvirtanen: {
-        displayName: 'Joonas Virtanen',
-        username: 'joonasvirtanen',
-        avatar: 'https://unavatar.io/twitter/joonasvirtanen',
-        verified: true
-      },
       wabi: {
         displayName: 'Wabi',
         username: 'wabi',
@@ -729,15 +727,27 @@ if you obsess over perceived performance, interaction design & typography dm me<
         verified: true
       },
       ekuyda: {
-        displayName: 'ekuyda',
+        displayName: 'Eugenia',
         username: 'ekuyda',
         avatar: 'https://unavatar.io/twitter/ekuyda',
+        verified: true
+      },
+      joonasvirtanen: {
+        displayName: 'Joonas Virtanen',
+        username: 'joonasvirtanen',
+        avatar: 'https://unavatar.io/twitter/joonasvirtanen',
         verified: true
       },
       BlasMoros: {
         displayName: 'Blas Moros',
         username: 'BlasMoros',
         avatar: 'https://unavatar.io/twitter/BlasMoros',
+        verified: true
+      },
+      dantioxidants: {
+        displayName: 'Dan',
+        username: 'dantioxidants',
+        avatar: 'https://unavatar.io/twitter/dantioxidants',
         verified: true
       }
     };
